@@ -4,18 +4,18 @@ import guru.springframework.domain.*;
 import guru.springframework.repositries.CategoryRepository;
 import guru.springframework.repositries.RecipeRepository;
 import guru.springframework.repositries.UnitOfMeasureRepository;
-import org.hibernate.id.IdentifierGeneratorHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import sun.java2d.opengl.OGLRenderQueue;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private final CategoryRepository categoryRepository;
@@ -29,6 +29,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         recipeRepository.saveAll(getRecipes());
     }
@@ -136,9 +137,10 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         guacRecipe.getCategories().add(mexicanCategory);
 
         recipes.add(guacRecipe);
+        log.debug("Added Guac Recipe");
 
         Recipe tacosRecipe = new Recipe();
-        tacosRecipe.setDescription("Spciy Grilled Chicken Tacos");
+        tacosRecipe.setDescription("Spicy Grilled Chicken Tacos");
         tacosRecipe.setCookTime(9);
         tacosRecipe.setPrepTime(20);
         tacosRecipe.setDifficulty(Difficulty.MODERATE);
@@ -182,6 +184,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         tacosRecipe.getCategories().add(mexicanCategory);
 
         recipes.add(tacosRecipe);
+        log.debug("Added Tacos Recipe");
 
         return recipes;
     }
